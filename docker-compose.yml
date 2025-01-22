@@ -1,4 +1,4 @@
-version: '3'
+# version: '3'
 services:
   influxdb:
     # Full tag list: https://hub.docker.com/r/library/influxdb/tags/
@@ -10,9 +10,9 @@ services:
     image: "influxdb"
     volumes:
       # Mount for influxdb data directory
-      - ./influxdb/data:/var/lib/influxdb
+      - ./influxdb/data:/var/lib/influxdb:Z
       # Mount for influxdb configuration
-      - ./influxdb/config/:/etc/influxdb/
+      - ./influxdb/config/:/etc/influxdb/:Z
     ports:
       # The API for InfluxDB is served on port 8086
       - "8086:8086"
@@ -35,9 +35,9 @@ services:
       - influxdb
     volumes:
       # Mount for telegraf configuration
-      - ./telegraf/:/etc/telegraf/
+      - ./telegraf/:/etc/telegraf/:Z
       # Mount for Docker API access
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:Z
     depends_on:
       - influxdb
 
@@ -51,9 +51,9 @@ services:
     image: "kapacitor"
     volumes:
       # Mount for kapacitor data directory
-      - ./kapacitor/data/:/var/lib/kapacitor
+      - ./kapacitor/data/:/var/lib/kapacitor:Z
       # Mount for kapacitor configuration
-      - ./kapacitor/config/:/etc/kapacitor/
+      - ./kapacitor/config/:/etc/kapacitor/:Z
     # Kapacitor requires network access to Influxdb
     links:
       - influxdb
@@ -73,7 +73,7 @@ services:
       RESOURCES_PATH: "/usr/share/chronograf/resources"
     volumes:
       # Mount for chronograf database
-      - ./chronograf/data/:/var/lib/chronograf/
+      - ./chronograf/data/:/var/lib/chronograf/:Z
     links:
       # Chronograf requires network access to InfluxDB and Kapacitor
       - influxdb
